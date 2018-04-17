@@ -31,16 +31,19 @@ userSchema.statics.signUpUser = function (user_id, sns_id, callback) {
             }
         })
 };
-
-/*userSchema.statics.signUpUser = function (user_id, sns_id) {
-    this.model("User").collection.insert({user_id: user_id, sns_id: sns_id}
-        , function (error, next) {
-            if (err) next(error);
-            else {
-                return next();
-            }
-        })
-};*/
+// 토큰 , sns아이디 가지고 사용자 정보 가져오기
+userSchema.statics.getUserInfo = function (user_id,sns_id,callback) {
+    this.model("User").collection.findUserInfo({
+        user_id : user_id,
+        sns_id : sns_id
+    },function (err,users) {
+        if(err) callback(err);
+        else{
+            return callback(null,users);
+        }
+    })
+}
+//userSchema.statics.
 
 var User = mongoose.model("User", userSchema);
 
