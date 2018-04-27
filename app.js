@@ -29,8 +29,8 @@ var promise = mongoose.connect(dbUrl, {
 /*
 Router
  */
-var sign_up = require("./routes/sign_up");
-var pin_upload = require("./routes/pin_upload");
+var sign_up = require("./routes/user_router");
+var pin_upload = require("./routes/pin_router");
 
 
 //promise.then()

@@ -102,7 +102,7 @@ newsSchema.statics.showNewsByUpToDate = function (news_date,callback) {
             callback(null,news)
         }
     })
-}
+};
 var News = mongoose.model("News", newsSchema);
 
 module.exports = News;
