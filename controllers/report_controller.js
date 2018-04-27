@@ -11,6 +11,7 @@ let express = require("express");
 let thumbnail = require("node-thumbnail").thumb;
 let Report = require("../models/reportSchema");
 const sharp = require("sharp");
+
 let s3Upload = multer({
     storage: multerS3({
         s3: s3,
