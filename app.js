@@ -14,7 +14,13 @@ var port = process.env.PORT || 2721;
 // db 연결
 var mongoose = require("mongoose");
 var db = mongoose.connection;
-var dbUrl = "mongodb://hanium_frontier:123123@ds161630.mlab.com:61630/hanium_frontier";
+let fs = require("fs");
+let dbFile = fs.readFileSync("./db_config/db.json");
+let dbConfig = JSON.parse(dbFile);
+var dbUrl = dbConfig.dbUrl;
+
+
+
 var MongoClient = require("mongodb").MongoClient;
 var promise = mongoose.connect(dbUrl, {
     }, function (mongoError) {
@@ -31,7 +37,7 @@ Router
  */
 var sign_up = require("./routes/user_router");
 var pin_upload = require("./routes/pin_router");
-
+var report_router = require("./routes/read_file_router");
 
 //promise.then()
 
@@ -51,7 +57,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/v1',sign_up);
 app.use('/v1',pin_upload);
-
+app.use('/v1',report_router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
