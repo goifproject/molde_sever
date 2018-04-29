@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8e355fc2-8fa6-4bed-a4ab-0818a8d03c5f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/reportSchema.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/reportSchema.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/read_file/seoul_mapo_female_safety.csv" beforeDir="false" afterPath="$PROJECT_DIR$/read_file/seoul_mapo_female_safety.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/crawlingFile.js" beforeDir="false" afterPath="$PROJECT_DIR$/service/crawlingFile.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -56,20 +52,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="crawlingFile.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="crawlingFile.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/service/crawlingFile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="708">
-              <caret line="51" column="62" lean-forward="true" selection-start-line="51" selection-start-column="62" selection-end-line="51" selection-end-column="62" />
+            <state relative-caret-position="252">
+              <caret line="27" column="51" selection-start-line="27" selection-start-column="51" selection-end-line="27" selection-end-column="51" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="news_controller.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controllers/news_controller.js">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="13" column="53" selection-start-line="13" selection-start-column="53" selection-end-line="13" selection-end-column="53" />
+            <state relative-caret-position="105">
+              <caret line="58" lean-forward="true" selection-start-line="57" selection-start-column="5" selection-end-line="58" />
             </state>
           </provider>
         </entry>
@@ -175,8 +171,8 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="962" />
-    <option name="y" value="153" />
+    <option name="x" value="657" />
+    <option name="y" value="41" />
     <option name="width" value="1225" />
     <option name="height" value="910" />
   </component>
@@ -290,12 +286,12 @@
       <workItem from="1524798401103" duration="455000" />
       <workItem from="1524831669269" duration="640000" />
       <workItem from="1524879398621" duration="4516000" />
-      <workItem from="1524978108620" duration="4567000" />
+      <workItem from="1524978108620" duration="4816000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62849000" />
+    <option name="totallyTimeSpent" value="63098000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -307,7 +303,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="507" y="66" width="980" height="728" extended-state="0" />
+    <frame x="526" y="33" width="980" height="728" extended-state="0" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2753623" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.40604028" />
@@ -530,13 +526,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="58" lean-forward="true" selection-start-line="57" selection-start-column="5" selection-end-line="58" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/controllers/news_controller.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
@@ -602,8 +591,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/service/crawlingFile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="708">
-          <caret line="51" column="62" lean-forward="true" selection-start-line="51" selection-start-column="62" selection-end-line="51" selection-end-column="62" />
+        <state relative-caret-position="252">
+          <caret line="27" column="51" selection-start-line="27" selection-start-column="51" selection-end-line="27" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="58" lean-forward="true" selection-start-line="57" selection-start-column="5" selection-end-line="58" />
         </state>
       </provider>
     </entry>
