@@ -11,10 +11,8 @@ var reportSchema = new Schema({
     rep_id: {type: String, required: true},
     rep_nm: {type: String},
     rep_contents: {type: String},
-    rep_geom: {
-        lat: {type: String},
-        lon: {type: String}
-    },
+    rep_lat: {type: String},
+    rep_lon: {type: String},
     rep_addr: {type: String},
     user_id: {type: String},
     rep_state: {type: Number, default: 0}, // 0. 접수중 - 빨간색 / 1. 접수완료 (탐지완료) : 빨간색 / 2. 접수완료 (제거)  - 파란색 /  3. 접수완료(미발견 또는 허위신고) 흰색
@@ -48,7 +46,8 @@ reportSchema.statics.insertReportFunc = function (rep_id, rep_nm, rep_contents, 
         rep_id: rep_id,
         rep_nm: rep_nm,
         rep_contents: rep_contents,
-        rep_geom: {lat: rep_lat, lon: rep_lon},
+        rep_lat: rep_lat,
+        rep_lon: rep_lon,
         rep_addr: rep_addr,
         user_id: user_id,
         rep_img: img_object,
@@ -68,12 +67,12 @@ reportSchema.statics.updateRptMarker = function (rep_id, rep_state, callback) {
         $set: {rep_state: rep_state}
     }, {
         upsert: true, multi: true
-    },callback);
+    }, callback);
 };
 
 // 위도,경도를 가지고 근방 5km이내 찾기 >> 구현하기
 reportSchema.statics.showRptSpot = function (rep_lat, rep_lon, callback) {
-    this.model("Report").collection.find({rep_geom: {lat: rep_lat, lon: rep_lon}},
+    this.model("Report").collection.find({lat: rep_lat, lon: rep_lon},
         function (error, report) {
             if (error) callback(error);
             else {
