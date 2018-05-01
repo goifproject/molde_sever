@@ -25,9 +25,8 @@ module.exports = function(router){
             if(err) console.error(new Error(err));
             else{
                 let data_object = {};
-                data_arr_by_rn = data.split("\r\n");
+                data_arr_by_rn = data.split("\n");
                 for(var elem in data_arr_by_rn){
-                    console.log(data_arr_by_rn[elem].split(",")[0]);
                     number_arr[elem] = data_arr_by_rn[elem].split(",")[0];
                     brand_arr[elem] = data_arr_by_rn[elem].split(",")[1];
                     spot_arr[elem] = data_arr_by_rn[elem].split(",")[2];
@@ -38,6 +37,8 @@ module.exports = function(router){
                     date_addr[elem] = data_arr_by_rn[elem].split(",")[7];
                     detail_addr[elem] = data_arr_by_rn[elem].split(",")[8];
                 }
+
+		console.log("갯수 : " + number_arr.length);
 
                 for(var i=0;i<number_arr.length;i++){
                     var json_obj = new Object();
@@ -53,9 +54,6 @@ module.exports = function(router){
 	
                     sendData.push(json_obj);
                 }
-		for(var i=0;i<number_arr.length;i++){
-		   console.log(jumpo_arr[i]);
-		}
 
                 let jsonData = JSON.stringify(sendData);
                 console.log(jsonData);
