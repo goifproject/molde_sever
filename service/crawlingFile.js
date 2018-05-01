@@ -55,7 +55,7 @@ module.exports = function(router){
 
                 let jsonData = JSON.stringify(sendData);
                 console.log(jsonData);
-                res.status(200).send(JSON.stringify(jsonData));
+                res.status(200).send((jsonData));
             }
         });
     })
