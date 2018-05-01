@@ -50,8 +50,12 @@ module.exports = function(router){
                     json_obj.rep_lon = lon_arr[i];
                     json_obj.rep_date = date_addr[i];
                     json_obj.rep_detail_addr = detail_addr[i];
+	
                     sendData.push(json_obj);
                 }
+		for(var i=0;i<number_arr.length;i++){
+		   console.log(jumpo_arr[i]);
+		}
 
                 let jsonData = JSON.stringify(sendData);
                 console.log(jsonData);

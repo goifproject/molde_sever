@@ -9,7 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-var port = process.env.PORT || 2721;
+var port = process.env.PORT || 7019;
 
 // db 연결
 var mongoose = require("mongoose");
