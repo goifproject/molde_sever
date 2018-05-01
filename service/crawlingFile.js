@@ -53,11 +53,20 @@ module.exports = function(router){
                     json_obj.rep_detail_addr = detail_addr[i];
 	
                     sendData.push(json_obj);
+		        
                 }
-
-                let jsonData = JSON.stringify(sendData);
-                console.log(jsonData);
-                res.status(200).send((jsonData));
+   		for(var i=0;i<sendData.length;i++){
+		    console.log(sendData[i]);
+		}
+		
+		console.log(sendData.length);
+	        let json_feed = { 
+		    feed : sendData
+                }
+		
+         //       let jsonData = JSON.stringify(json_feed);
+                console.log(json_feed);
+                res.status(200).send((json_feed));
             }
         });
     })
