@@ -37,7 +37,8 @@ Router
  */
 var sign_up = require("./routes/user_router");
 var pin_upload = require("./routes/pin_router");
-var report_router = require("./routes/read_file_router");
+var report_router = require("./routes/report_router");
+var faq_router = require("./routes/faq_router");
 
 //promise.then()
 
@@ -58,6 +59,8 @@ app.use('/users', users);
 app.use('/v1',sign_up);
 app.use('/v1',pin_upload);
 app.use('/v1',report_router);
+app.use('/v1',faq_router);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
