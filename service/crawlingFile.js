@@ -25,9 +25,8 @@ module.exports = function(router){
             if(err) console.error(new Error(err));
             else{
                 let data_object = {};
-                data_arr_by_rn = data.split("\r\n");
+                data_arr_by_rn = data.split("\n");
                 for(var elem in data_arr_by_rn){
-                    console.log(data_arr_by_rn[elem].split(",")[0]);
                     number_arr[elem] = data_arr_by_rn[elem].split(",")[0];
                     brand_arr[elem] = data_arr_by_rn[elem].split(",")[1];
                     spot_arr[elem] = data_arr_by_rn[elem].split(",")[2];
@@ -38,6 +37,8 @@ module.exports = function(router){
                     date_addr[elem] = data_arr_by_rn[elem].split(",")[7];
                     detail_addr[elem] = data_arr_by_rn[elem].split(",")[8];
                 }
+
+		console.log("갯수 : " + number_arr.length);
 
                 for(var i=0;i<number_arr.length;i++){
                     var json_obj = new Object();
@@ -50,12 +51,22 @@ module.exports = function(router){
                     json_obj.rep_lon = lon_arr[i];
                     json_obj.rep_date = date_addr[i];
                     json_obj.rep_detail_addr = detail_addr[i];
+	
                     sendData.push(json_obj);
+		        
                 }
-
-                let jsonData = JSON.stringify(sendData);
-                console.log(jsonData);
-                res.status(200).send(JSON.stringify(jsonData));
+   		for(var i=0;i<sendData.length;i++){
+		    console.log(sendData[i]);
+		}
+		
+		console.log(sendData.length);
+	        let json_feed = { 
+		    feed : sendData
+                }
+		
+         //       let jsonData = JSON.stringify(json_feed);
+                console.log(json_feed);
+                res.status(200).send((json_feed));
             }
         });
     })
