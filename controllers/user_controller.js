@@ -27,7 +27,6 @@ module.exports = function (router) {
     });
 
     // 사용자 이미지 변경
-
     router.post("/profile", function (req, res, next) {
         let user_id = req.body.user_id;
         let user_img = req.body.user_img;
@@ -38,6 +37,5 @@ module.exports = function (router) {
             }
         })
     });
-
 
 };
