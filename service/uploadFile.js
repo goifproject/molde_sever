@@ -10,10 +10,16 @@ let expressSession = require("express-session");
 let express = require("express");
 let thumbnail = require("node-thumbnail").thumb;
 const sharp = require("sharp");
+
+
+/// Multiparty
+
+let multiparty = require("multiparty");
+
 let s3Upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: "moldibucket/report_image",
+        bucket: "moldebucket/report_image",
         shouldTransform: function (req, file, cb) {
             cb(null, /^image/i.test(file.mimetype))
         },
@@ -88,7 +94,29 @@ module.exports = function (router) {
         let repId = req.body.rep_id;
         let repNm = req.body.rep_nm;
         let repContents = req.body.rep_contents;
+        let path = "/home/ubuntu/molde_project/molde_server/public/images";
+        let options = {
+	    autoFiles : true,
+	    uploadDir : path
+        };
 
+     	
+        let form = new multiparty.Form(options);
+        let util = require("util");
+        let fs = require("fs");
+        fs.mkdir(path,function(err){
+	   if(err) console.log(new Error(err));
+	   else {
+		console.log("이미지 폴더 생성");
+	   }
+        });
+        form.parse(req,function(err,fields,files){
+	  //  res.writeHead(200,{'content-type' , 'multipart/form-data'});
+            res.write('received upload : \n\n');
+	    res.end(util.inspect({fields : fields , files : files}));
+
+           // 내용추가 
+        }) 
         /*   thumbnail({
                source: uploadPath,
                destination: thumbnailPath,

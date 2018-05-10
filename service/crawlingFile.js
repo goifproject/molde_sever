@@ -16,6 +16,11 @@ let detail_addr = new Array(); // 상세주소
 let data_arr_by_rn = new Array(); // 데이터 구분(\r\n)으로 자름
 let sendData = new Array();
 let report_addr = new Array();
+/*
+Multiparty
+*/
+
+let multiparty = require("multiparty");
 
 
 let file1 = path.join(__dirname,"../read_file/seoul_mapo_female_safety.csv");
@@ -51,7 +56,7 @@ module.exports = function(router){
                     json_obj.rep_lon = lon_arr[i];
                     json_obj.rep_date = date_addr[i];
                     json_obj.rep_detail_addr = detail_addr[i];
-	
+	            json_obj.rep_img = "https://moldebucket.s3.ap-northeast-2.amazonaws.com/report_image/seongho.jpg"
                     sendData.push(json_obj);
 		        
                 }
