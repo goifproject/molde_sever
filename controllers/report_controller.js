@@ -69,6 +69,28 @@ module.exports = function (router) {
         let img_filesize = [];
         let img_array = [];
 
+        router.use(express.json());
+        router.use(bodyParser.json({limit:'50mb'}));
+        router.use(bodyParser.urlencoded({limit:'50mb',extended:true}));
+
+        /*
+        s3 upload
+         */
+        let util = require("util");
+        let multiparty = require("multiparty");
+        let form = new multiparty.Form();
+
+        form.parse(req, function (err, fields, files) {
+            res.writeHead(200, {'content-type': 'multipart/form-data'});
+            res.write('received data');
+            res.end(util.inspect({fields: fields, files: files}));
+            console.log(fields);
+            console.log(files);
+
+        });
+
+
+
         for (let elem in req.files) {
             console.log(req.files[elem].location);
             img_filename.push(req.files[elem].originalname);
@@ -185,12 +207,12 @@ module.exports = function (router) {
     }
 
     // 특정 위치에 대해서 신고내역 보내주기
-    router.get("/pin",function (req,res,next) {
+    router.get("/pin", function (req, res, next) {
         let rep_lat = req.query.rep_lat;
         let rep_lon = req.query.rep_lon;
-        Report.showRptSpot(rep_lat,rep_lon,function (err,report) {
-            if(err) console.error(new Error(err));
-            else{
+        Report.showRptSpot(rep_lat, rep_lon, function (err, report) {
+            if (err) console.error(new Error(err));
+            else {
                 res.status(200).send(JSON.stringify(report));
             }
         })

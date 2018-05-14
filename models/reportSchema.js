@@ -24,6 +24,7 @@ var reportSchema = new Schema({
     comm_id: {type: String},
     rep_img: [[photoSchema]]
 });
+// 연습용 (s3)
 
 reportSchema.statics.uploadPin = function (rep_id, rep_nm, rep_contents, img_object, callback) {
 

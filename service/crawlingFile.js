@@ -23,15 +23,15 @@ Multiparty
 let multiparty = require("multiparty");
 
 
-let file1 = path.join(__dirname,"../read_file/seoul_mapo_female_safety.csv");
-module.exports = function(router){
-    router.get("/report",function (req,res,next) {
-        fs.readFile(file1,"UTF-8",function (err,data) {
-            if(err) console.error(new Error(err));
-            else{
+let file1 = path.join(__dirname, "../read_file/seoul_mapo_female_safety.csv");
+module.exports = function (router) {
+    router.get("/report", function (req, res, next) {
+        fs.readFile(file1, "UTF-8", function (err, data) {
+            if (err) console.error(new Error(err));
+            else {
                 let data_object = {};
                 data_arr_by_rn = data.split("\n");
-                for(var elem in data_arr_by_rn){
+                for (var elem in data_arr_by_rn) {
                     number_arr[elem] = data_arr_by_rn[elem].split(",")[0];
                     brand_arr[elem] = data_arr_by_rn[elem].split(",")[1];
                     spot_arr[elem] = data_arr_by_rn[elem].split(",")[2];
@@ -43,9 +43,9 @@ module.exports = function(router){
                     detail_addr[elem] = data_arr_by_rn[elem].split(",")[8];
                 }
 
-		console.log("갯수 : " + number_arr.length);
+                console.log("갯수 : " + number_arr.length);
 
-                for(var i=0;i<number_arr.length;i++){
+                for (var i = 0; i < number_arr.length; i++) {
                     var json_obj = new Object();
                     json_obj.rep_id = number_arr[i];
                     json_obj.rep_nm = brand_arr[i];
@@ -56,20 +56,20 @@ module.exports = function(router){
                     json_obj.rep_lon = lon_arr[i];
                     json_obj.rep_date = date_addr[i];
                     json_obj.rep_detail_addr = detail_addr[i];
-	            json_obj.rep_img = "https://moldebucket.s3.ap-northeast-2.amazonaws.com/report_image/seongho.jpg"
+                    json_obj.rep_img = "https://moldebucket.s3.ap-northeast-2.amazonaws.com/report_image/seongho.jpg"
                     sendData.push(json_obj);
-		        
+
                 }
-   		for(var i=0;i<sendData.length;i++){
-		    console.log(sendData[i]);
-		}
-		
-		console.log(sendData.length);
-	        let json_feed = { 
-		    feed : sendData
+                for (var i = 0; i < sendData.length; i++) {
+                    console.log(sendData[i]);
                 }
-		
-         //       let jsonData = JSON.stringify(json_feed);
+
+                console.log(sendData.length);
+                let json_feed = {
+                    feed: sendData
+                }
+
+                //       let jsonData = JSON.stringify(json_feed);
                 console.log(json_feed);
                 res.status(200).send((json_feed));
             }

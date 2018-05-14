@@ -96,27 +96,27 @@ module.exports = function (router) {
         let repContents = req.body.rep_contents;
         let path = "/home/ubuntu/molde_project/molde_server/public/images";
         let options = {
-	    autoFiles : true,
-	    uploadDir : path
+            autoFiles: true,
+            uploadDir: path
         };
 
-     	
+
         let form = new multiparty.Form(options);
         let util = require("util");
         let fs = require("fs");
-        fs.mkdir(path,function(err){
-	   if(err) console.log(new Error(err));
-	   else {
-		console.log("이미지 폴더 생성");
-	   }
+        fs.mkdir(path, function (err) {
+            if (err) console.log(new Error(err));
+            else {
+                console.log("이미지 폴더 생성");
+            }
         });
-        form.parse(req,function(err,fields,files){
-	  //  res.writeHead(200,{'content-type' , 'multipart/form-data'});
+        form.parse(req, function (err, fields, files) {
+            //  res.writeHead(200,{'content-type' , 'multipart/form-data'});
             res.write('received upload : \n\n');
-	    res.end(util.inspect({fields : fields , files : files}));
+            res.end(util.inspect({fields: fields, files: files}));
 
-           // 내용추가 
-        }) 
+            // 내용추가
+        });
         /*   thumbnail({
                source: uploadPath,
                destination: thumbnailPath,
