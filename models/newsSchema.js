@@ -9,7 +9,6 @@ var photoSchema = new Schema({
 
 var newsSchema = new Schema({
     news_id: {type: String, required: true},
-    category: {type: String},
     title: {type: String},
     contents: {type: String},
     news_date: {type: Date},
@@ -19,10 +18,9 @@ var newsSchema = new Schema({
 });
 
 // 뉴스 추가
-newsSchema.statics.addOnNews = function (news_id, category, title, contents, news_date, user_id, news_img, sm_img, callback) {
+newsSchema.statics.addOnNews = function (news_id, title, contents, news_date, user_id, news_img, sm_img, callback) {
     this.model("News").collection.insert({
         news_id: news_id,
-        category: category,
         title: title,
         contents: contents,
         news_date: news_date,
@@ -54,14 +52,13 @@ newsSchema.statics.findOnNews = function (news_id, user_id, callback) {
 };
 // findOnNews를 통해서 내가 올린 뉴스 정보를 먼저 찾는다.
 // users.news_id / users.user_id로 찾고 업데이트하기
-newsSchema.statics.updateOnNews = function (news_id, user_id, category, title, contents,
+newsSchema.statics.updateOnNews = function (news_id, user_id, title, contents,
                                             news_date, news_img, sm_img, callback) {
     this.model("News").collection.update({
         news_id: news_id,
         user_id: user_id
     }, {
         $set: {
-            category: category,
             title: title,
             contents: contents,
             news_date: news_date,
@@ -85,6 +82,7 @@ newsSchema.statics.dropOnNews = function (news_id, user_id, callback) {
 
 // 카드 뉴스 목록 불러오기
 // 배열로 불러올 것임
+/*
 newsSchema.statics.showNewsByCategory = function (category,callback) {
     this.model("News").collection.find({category : category},function (err,news) {
         if(err) callback(err);
@@ -93,6 +91,7 @@ newsSchema.statics.showNewsByCategory = function (category,callback) {
         }
     })
 };
+*/
 
 // 처음엔 news_date를 가지고 최근꺼 10개만 해서 뿌려주기
 newsSchema.statics.showNewsByUpToDate = function (news_date,callback) {
