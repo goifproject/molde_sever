@@ -1,50 +1,24 @@
 let multer = require('multer');
 let AWS = require("aws-sdk");
+
+let fs = require("fs");
+// s3 upload by multiparty
+
+let s3Stream = require("s3-upload-stream")(new AWS.S3());
 AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
-let s3 = new AWS.S3();
-let multerS3 = require("multer-s3");
+
+
+let zlib = require("zlib");
+let compress = zlib.createGzip();
+
+
 let path = require("path");
 let bodyParser = require("body-parser");
 
 let express = require("express");
 let thumbnail = require("node-thumbnail").thumb;
 let Report = require("../models/reportSchema");
-//const sharp = require("sharp");
 
-let s3Upload = multer({
-    storage: multerS3({
-        s3: s3,
-        bucket: "moldibucket/report_image",
-        shouldTransform: function (req, file, cb) {
-            cb(null, /^image/i.test(file.mimetype))
-        },
-        acl: 'public-read-write',
-        contentType: multerS3.AUTO_CONTENT_TYPE,
-        key: function (req, file, cb) {
-            cb(null, file.originalname);
-        }
-        /*transforms: [{
-            id: 'original',
-            key: function (req, file, cb) {
-                cb(null, file.originalname);
-            },
-            transform: function (req, file, cb) {
-                cb(null, sharp().jpg());
-            },
-
-        },
-            {
-                id: 'thumbnail',
-                key: function (req, file, cb) {
-                    cb(null, 'image-thumbnail.jpg');
-                },
-                transform: function (req, file, cb) {
-                    cb(null, sharp().resize(100, 100).jpg());
-                }
-            }],
-*/
-    })
-});
 
 module.exports = function (router) {
     router.use(bodyParser.urlencoded({extended: true}));
@@ -58,17 +32,9 @@ module.exports = function (router) {
     //s3Upload.array('imgFiles',5),
     // 신고 내역 정리
 
+    router.use(express.static(path.join(__dirname + "../", "public/images")));
 
     router.post("/pin", function (req, res, next) {
-        /*  let rep_id = req.body.rep_id;
-          let rep_nm = req.body.rep_nm;
-          let rep_contents = req.body.rep_contents;
-          let rep_lat = req.body.rep_lat;
-          let rep_lon = req.body.rep_lon;
-          let rep_addr = req.body.rep_addr;
-          let user_id = req.body.user_id;
-          let rep_date = req.body.rep_date;*/
-
         let img_filename = [];
         let img_filepath = [];
         let img_filesize = [];
@@ -82,12 +48,15 @@ module.exports = function (router) {
         s3 upload
          */
         let util = require("util");
+        let options = {
+            uploadDir: __dirname + "/../public/images/",
+            autoFiles: true,
+        };
         let multiparty = require("multiparty");
-        let form = new multiparty.Form();
+        let form = new multiparty.Form(options);
 
         form.parse(req, function (err, fields, files) {
 
-            //res.writeHead(200, {'content-type': 'multipart/form-data'});
             res.write('received data');
             res.end(util.inspect({fields: fields, files: files}));
 
@@ -100,6 +69,13 @@ module.exports = function (router) {
             }
 
 
+            for (var elem in img_filepath) {
+                fs.rename(img_filepath[elem], path.join(__dirname, "../public/images/" + files.imgFiles[elem].originalFilename), function (err) {
+                    if (err) throw err;
+                });
+            }
+
+            console.log(img_filepath[0]);
             for (var index = 0; index < img_filepath.length; index++) {
                 let img_object = {};
                 img_object.filename = img_filename[index];
@@ -117,22 +93,59 @@ module.exports = function (router) {
             let user_id = fields.user_id;
             let rep_date = fields.rep_date;
 
-            let multiparty2 = require("connect-multiparty");
-            let multipartyMiddleware = multiparty2();
 
-            let multipartParams = {
-                Bucket: "moldibucket.report_image",
-                Key : files.imgFiles
+            let read_array = new Array();
+            // let read = fs.createReadStream(__dirname + "/../public/images/" + files.imgFiles[0].originalFilename);
+            for (var i = 0; i < files.imgFiles.length; i++) {
+                read_array[i] = fs.createReadStream(path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename));
             }
 
+            console.log(read_array.length);
 
-            // report id , report 이름(제목) , report 내용 , report 위도 , report 경도 , report 주소 , 사용자 아이디(유일) , 이미지 정보들 , 업로드 시간
-            Report.insertReportFunc(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, img_array, rep_date, function (err, report) {
-                if (err) console.log(new Error(err));
-                else {
 
-                }
-            })
+            let upload = new Array();
+            let imgContentsArr = new Array(); // 이미지 관련 내용들 배열로 재정의
+
+
+            for (var i = 0; i < read_array.length; i++) {
+                upload[i] = s3Stream.upload({
+                    Bucket: "moldebucket",
+                    Key: files.imgFiles[i].originalFilename,
+                    ACL: "public-read",
+                    StorageClass: "REDUCED_REDUNDANCY",
+                    ContentType: "multipart/form-data"
+                });
+
+                upload[i].on('part', function (dt) {
+                    console.log(dt);
+                });
+
+
+                upload[i].on('uploaded', function (dt) {
+                    console.log("경로입니다1." + dt.Location);
+                    for (var j = 0; j < read_array.length; j++) {
+                        let imgContents = new Object();  // 이미지 관련 내용들 오브젝트
+                        imgContents.filename = files.imgFiles[j].originalFilename;
+                        imgContents.filepath = dt.Location;
+                        imgContentsArr.push(imgContents);
+
+                    }
+
+                    Report.insertReportFunc(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, imgContentsArr, rep_date, function (err, report) {
+                        if (err) console.log(new Error(err));
+                        else {
+                            console.log("파일 저장 완료");
+
+                        }
+                    });
+
+                });
+
+            }
+
+// S3 전송
+            for (var i = 0; i < read_array.length; i++)
+                read_array[i].pipe(upload[i]);
         });
     });
     // 관리자가 수정할 때 사용할 라우터

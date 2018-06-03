@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var photoSchema = new Schema([{
     filename: {type: String, default: null},
     filepath: {type: String, default: null},
-    size: {type: String, default: null}
+
 }]);
 
 var reportSchema = new Schema({
@@ -22,7 +22,7 @@ var reportSchema = new Schema({
         conf_date: {type: Date, default: null}
     },
     comm_id: {type: String},
-    rep_img: [[photoSchema]]
+    rep_img: [photoSchema]
 });
 // 연습용 (s3)
 
