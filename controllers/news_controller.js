@@ -110,6 +110,7 @@ module.exports = function (router) {
                         News.addOnNews(news_id, title, contents, new Date(new Date().setHours(now_hour)), user_id, imgContentsArr, function (err, news) {
                             if (err) console.log(new Error(err));
                             else {
+                                // 체크
                                 console.log("파일 저장 완료");
                             }
                         });
