@@ -8,10 +8,6 @@ let s3Stream = require("s3-upload-stream")(new AWS.S3());
 AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
 
 
-let zlib = require("zlib");
-let compress = zlib.createGzip();
-
-
 let path = require("path");
 let bodyParser = require("body-parser");
 
@@ -22,16 +18,6 @@ let Report = require("../models/reportSchema");
 
 module.exports = function (router) {
     router.use(bodyParser.urlencoded({extended: true}));
-    // router.use(cookieParser());
-    // router.use(expressSession({
-    //     secret: 'moldi',
-    //     resave: true,
-    //     saveUninitialized: true
-    // }));
-
-    //s3Upload.array('imgFiles',5),
-    // 신고 내역 정리
-
     router.use(express.static(path.join(__dirname + "../", "public/images")));
 
     router.post("/pin", function (req, res, next) {
@@ -68,14 +54,15 @@ module.exports = function (router) {
                 img_filesize.push(files.imgFiles[elem].size + "kb");
             }
 
+/*
 
-            for (var elem in img_filepath) {
+            for (let elem in img_filepath) {
                 fs.rename(img_filepath[elem], path.join(__dirname, "../public/images/" + files.imgFiles[elem].originalFilename), function (err) {
                     if (err) throw err;
                 });
             }
+*/
 
-            console.log(img_filepath[0]);
             for (var index = 0; index < img_filepath.length; index++) {
                 let img_object = {};
                 img_object.filename = img_filename[index];
@@ -91,8 +78,12 @@ module.exports = function (router) {
             let rep_lon = fields.rep_lon;
             let rep_addr = fields.rep_addr;
             let user_id = fields.user_id;
-            let rep_date = fields.rep_date;
 
+
+            let now_hour = new Date().getHours() + 9;
+            let rep_date = new Date(new Date().setHours(now_hour));
+
+            let count = 0;
 
             let read_array = new Array();
             // let read = fs.createReadStream(__dirname + "/../public/images/" + files.imgFiles[0].originalFilename);
@@ -100,17 +91,15 @@ module.exports = function (router) {
                 read_array[i] = fs.createReadStream(path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename));
             }
 
-            console.log(read_array.length);
-
-
             let upload = new Array();
             let imgContentsArr = new Array(); // 이미지 관련 내용들 배열로 재정의
 
 
             for (var i = 0; i < read_array.length; i++) {
+                let currentFile = files.imgFiles[i];
                 upload[i] = s3Stream.upload({
                     Bucket: "moldebucket",
-                    Key: files.imgFiles[i].originalFilename,
+                    Key: user_id + "_" + files.imgFiles[i].originalFilename,
                     ACL: "public-read",
                     StorageClass: "REDUCED_REDUNDANCY",
                     ContentType: "multipart/form-data"
@@ -123,22 +112,21 @@ module.exports = function (router) {
 
                 upload[i].on('uploaded', function (dt) {
                     console.log("경로입니다1." + dt.Location);
-                    for (var j = 0; j < read_array.length; j++) {
-                        let imgContents = new Object();  // 이미지 관련 내용들 오브젝트
-                        imgContents.filename = files.imgFiles[j].originalFilename;
-                        imgContents.filepath = dt.Location;
-                        imgContentsArr.push(imgContents);
+                    let imgContents = new Object();  // 이미지 관련 내용들 오브젝트
+                    imgContents.filename = currentFile.originalFilename;
+                    imgContents.filepath = dt.Location;
+                    imgContentsArr.push(imgContents);
 
+                    count += 1;
+
+                    if (count == read_array.length) {
+                        Report.insertReportFunc(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, imgContentsArr, rep_date, function (err, report) {
+                            if (err) console.log(new Error(err));
+                            else {
+                                console.log("파일 저장 완료");
+                            }
+                        });
                     }
-
-                    Report.insertReportFunc(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, imgContentsArr, rep_date, function (err, report) {
-                        if (err) console.log(new Error(err));
-                        else {
-                            console.log("파일 저장 완료");
-
-                        }
-                    });
-
                 });
 
             }

@@ -39,7 +39,7 @@ var sign_up = require("./routes/user_router");
 var pin_upload = require("./routes/pin_router");
 var report_router = require("./routes/report_router");
 var faq_router = require("./routes/faq_router");
-
+var news_router = require("./routes/news_router");
 //promise.then()
 
 // view engine setup
@@ -60,7 +60,7 @@ app.use('/v1',sign_up);
 app.use('/v1',pin_upload);
 app.use('/v1',report_router);
 app.use('/v1',faq_router);
-
+app.use('/v1',news_router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

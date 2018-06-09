@@ -14,11 +14,10 @@ var newsSchema = new Schema({
     news_date: {type: Date},
     user_id: {type: String},
     news_img: [photoSchema],
-    sm_img: [photoSchema]
 });
 
 // 뉴스 추가
-newsSchema.statics.addOnNews = function (news_id, title, contents, news_date, user_id, news_img, sm_img, callback) {
+newsSchema.statics.addOnNews = function (news_id, title, contents, news_date, user_id, news_img, callback) {
     this.model("News").collection.insert({
         news_id: news_id,
         title: title,
@@ -26,7 +25,6 @@ newsSchema.statics.addOnNews = function (news_id, title, contents, news_date, us
         news_date: news_date,
         user_id: user_id,
         news_img: news_img,
-        sm_img: sm_img
     }, function (err, news) {
         if (err) callback(err);
         else {
@@ -53,7 +51,7 @@ newsSchema.statics.findOnNews = function (news_id, user_id, callback) {
 // findOnNews를 통해서 내가 올린 뉴스 정보를 먼저 찾는다.
 // users.news_id / users.user_id로 찾고 업데이트하기
 newsSchema.statics.updateOnNews = function (news_id, user_id, title, contents,
-                                            news_date, news_img, sm_img, callback) {
+                                            news_date, news_img, callback) {
     this.model("News").collection.update({
         news_id: news_id,
         user_id: user_id
@@ -63,12 +61,24 @@ newsSchema.statics.updateOnNews = function (news_id, user_id, title, contents,
             contents: contents,
             news_date: news_date,
             news_img: news_img,
-            sm_img: sm_img
         }
-    }, {
+    } , {
         upsert: true, multi: true
     }, callback);
 };
+
+// 기존 내용에 추가 하기
+newsSchema.statics.pushOnNews = function (news_id, user_id, news_img, callback) {
+    this.model("News").collection.update({
+        news_id: news_id,
+        user_id: user_id
+    }, {
+        $push: {
+            news_img: news_img,
+        }
+    }, callback);
+};
+
 
 // news_id와 user_id로 올린거 찾고 지우기
 newsSchema.statics.dropOnNews = function (news_id, user_id, callback) {
