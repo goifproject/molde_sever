@@ -4,6 +4,8 @@
     <list default="true" id="8e355fc2-8fa6-4bed-a4ab-0818a8d03c5f" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/report_controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/report_controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images/SEiy1ux4r8M6F2-IwnkakgKV.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images/seonghoHaam.jpg" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,8 +22,8 @@
       <file leaf-file-name="report_controller.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/controllers/report_controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="151" column="11" lean-forward="true" selection-start-line="151" selection-start-column="11" selection-end-line="151" selection-end-column="11" />
+            <state relative-caret-position="118">
+              <caret line="179" column="107" selection-start-line="179" selection-start-column="107" selection-end-line="179" selection-end-column="107" />
             </state>
           </provider>
         </entry>
@@ -29,8 +31,8 @@
       <file leaf-file-name="news_controller.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controllers/news_controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="186" column="19" lean-forward="true" selection-start-line="186" selection-start-column="19" selection-end-line="186" selection-end-column="19" />
+            <state relative-caret-position="212">
+              <caret line="198" column="16" lean-forward="true" selection-start-line="198" selection-start-column="16" selection-end-line="198" selection-end-column="52" />
             </state>
           </provider>
         </entry>
@@ -105,6 +107,7 @@
       <find>s3</find>
       <find>upload</find>
       <find>read</find>
+      <find>imgContentsArr</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -165,10 +168,10 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="456" />
-    <option name="y" value="42" />
-    <option name="width" value="1460" />
-    <option name="height" value="1027" />
+    <option name="x" value="55" />
+    <option name="y" value="82" />
+    <option name="width" value="1720" />
+    <option name="height" value="1034" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -204,6 +207,12 @@
               <item name="molde_sever" type="b2602c69:ProjectViewProjectNode" />
               <item name="molde_sever" type="462c0819:PsiDirectoryNode" />
               <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="molde_sever" type="b2602c69:ProjectViewProjectNode" />
+              <item name="molde_sever" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="molde_sever" type="b2602c69:ProjectViewProjectNode" />
@@ -293,12 +302,12 @@
       <workItem from="1528000170714" duration="17464000" />
       <workItem from="1528517389273" duration="15770000" />
       <workItem from="1528861725951" duration="3000" />
-      <workItem from="1529121604842" duration="1404000" />
+      <workItem from="1529121604842" duration="10343000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="120151000" />
+    <option name="totallyTimeSpent" value="129090000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -312,11 +321,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="365" y="34" width="1168" height="821" extended-state="0" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2305026" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49892473" weight="0.39732888" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17317708" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49892473" weight="0.39633286" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50065106" side_tool="true" weight="0.25246826" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.327212" />
@@ -324,7 +332,7 @@
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49934897" visible="true" weight="0.1950867" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49934897" visible="true" weight="0.24682651" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -597,15 +605,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/news_controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="186" column="19" lean-forward="true" selection-start-line="186" selection-start-column="19" selection-end-line="186" selection-end-column="19" />
+        <state relative-caret-position="212">
+          <caret line="198" column="16" lean-forward="true" selection-start-line="198" selection-start-column="16" selection-end-line="198" selection-end-column="52" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/report_controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="151" column="11" lean-forward="true" selection-start-line="151" selection-start-column="11" selection-end-line="151" selection-end-column="11" />
+        <state relative-caret-position="118">
+          <caret line="179" column="107" selection-start-line="179" selection-start-column="107" selection-end-line="179" selection-end-column="107" />
         </state>
       </provider>
     </entry>

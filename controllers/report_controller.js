@@ -87,69 +87,139 @@ module.exports = function (router) {
 
             let read_array = new Array();
             let s3_send_flag = false;
-            // let read = fs.createReadStream(__dirname + "/../public/images/" + files.imgFiles[0].originalFilename);
+
+            /*
+            비동기 처리 --> 파일 다 만들어지고 이름 변경하기
+             */
+
+            //let createStreamS3 = util.promisify(fs.createReadStream);
+
+
             for (var i = 0; i < files.imgFiles.length; i++) {
+
+                try {
+                    fs.renameSync(img_filepath[i], path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename))
+                } catch (error) {
+                    console.error(error);
+                }
+                ;
                 read_array[i] = fs.createReadStream(path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename));
-                fs.rename(img_filepath[i], path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename), function (err) {
-                    if (err) throw err;
-                    else{
-                        s3_send_flag = true;
-                    }
-                });
+                console.log("파일 만들기 완료 " + (i + 1));
+                // fs.renameSync(img_filepath[i], path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename))
             }
 
-           /* for (var i = 0; i < files.imgFiles.length; i++) {
 
-            }*/
+            console.log("파일 만들기 최종 완료");
+
+            /*    async function createStreamS3Fn() {
+                    for (var i = 0; i < files.imgFiles.length; i++) {
+                        await createStreamS3(path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename));
+                    }
+                }
+    */
+
+            console.log("이름 변경 모두 완료");
 
 
+            //let upload = new Array();
 
-            if(s3_send_flag){
-                let upload = new Array();
-                let imgContentsArr = new Array(); // 이미지 관련 내용들 배열로 재정의
+            // function insertFileToDB(){
+            //     Report.insertReportFunc(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, imgContentsArr, rep_date, function (err, report) {
+            //         if (err) console.log(new Error(err));
+            //         else {
+            //             console.log("파일 저장 완료");
+            //         }
+            //     });
+            // }
 
-                for (var i = 0; i < read_array.length; i++) {
-                    let currentFile = files.imgFiles[i];
-                    upload[i] = s3Stream.upload({
+            let reportFn = util.promisify(Report.insertReportFunc);
+
+
+            // function saveReportToDB(){
+            //     return new Promise((resolve,reject) => {
+            //         resolve(insertFileToDB);
+            //     })
+            // }
+
+
+            function s3UploadPromise() {
+                return new Promise((resolve, reject) => {
+
+                    let upload = s3Stream.upload({
                         Bucket: "moldebucket",
-                        Key: user_id + "_" + files.imgFiles[i].originalFilename,
+                        Key: user_id + "_" + files.imgFiles.originalFilename, // 날짜 시간 넣기
                         ACL: "public-read",
                         StorageClass: "REDUCED_REDUNDANCY",
-                        ContentType: "multipart/form-data"
+                        ContentType: "multipart/form-data" // 이미지
+                    });
+
+                    upload.on('part', (detail) => {
+                        console.log(detail);
+                    });
+
+                    upload.on('uploaded', (detail) => {
+                        resolve({detail: detail});
+                    });
+
+                    upload.on('error', (err) => {
+                        reject(err);
                     });
 
 
-                    upload[i].on('part', function (dt) {
-                        console.log(dt);
-                    });
+                    /* for (var i = 0; i < read_array.length; i++) {
+                         upload[i] = s3Stream.upload({
+                         });
+                     }*/
+                })
+            }
 
+            function sendToS3server() {
+                read_array.pipe(upload);
+            }
 
-                    upload[i].on('uploaded', function (dt) {
-                        console.log("경로입니다1." + dt.Location);
-                        let imgContents = new Object();  // 이미지 관련 내용들 오브젝트
-                        imgContents.filename = currentFile.originalFilename;
-                        imgContents.filepath = dt.Location;
-                        imgContentsArr.push(imgContents);
-
-                        count += 1;
-
-                        if (count == read_array.length) {
-                            Report.insertReportFunc(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, imgContentsArr, rep_date, function (err, report) {
-                                if (err) console.log(new Error(err));
-                                else {
-                                    console.log("파일 저장 완료");
-                                }
-                            });
-                        }
-                    });
-
+            async function s3UploadStream(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, rep_date) {
+                let imgContentsArr = new Array(); // 이미지 관련 내용들 배열로 재정의
+                for (var i = 0; i < read_array.length; i++) {
+                    let result = await s3UploadPromise();
+                    let imgContents = new Object();  // 이미지 관련 내용들 오브젝트
+                    let currentFile = files.imgFiles[i];
+                    imgContents.filename = currentFile.originalFilename;
+                    imgContents.filepath = result.Location;
+                    imgContentsArr.push(imgContents);
+                    console.log(JSON.stringify(result.detail));
+                    await reportFn(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, imgContentsArr, rep_date);
+                    await sendToS3server();
                 }
+            }
+
+
+            /* for (var i = 0; i < read_array.length; i++) {
+
+
+
+
+                 /!*upload[i].on('uploaded', function (dt) {
+                     console.log("경로입니다1." + dt.Location);
+                     let imgContents = new Object();  // 이미지 관련 내용들 오브젝트
+                     imgContents.filename = currentFile.originalFilename;
+                     imgContents.filepath = dt.Location;
+                     imgContentsArr.push(imgContents);
+
+                     count += 1;
+
+                     if (count == read_array.length) {
+
+                     }
+                 });*!/
+
+             }*/
 
 // S3 전송
-                for (var i = 0; i < read_array.length; i++)
-                    read_array[i].pipe(upload[i]);
-            }
+            /* for (var i = 0; i < read_array.length; i++)
+                 read_array[i].pipe(upload[i]);*/
             // 명칭 바뀌고 나서 보내기
+
+            s3UploadStream(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, rep_date); // 전송
         });
     });
     // 관리자가 수정할 때 사용할 라우터
