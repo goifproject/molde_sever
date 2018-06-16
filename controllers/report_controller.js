@@ -54,14 +54,14 @@ module.exports = function (router) {
                 img_filesize.push(files.imgFiles[elem].size + "kb");
             }
 
-/*
+            /*
 
-            for (let elem in img_filepath) {
-                fs.rename(img_filepath[elem], path.join(__dirname, "../public/images/" + files.imgFiles[elem].originalFilename), function (err) {
-                    if (err) throw err;
-                });
-            }
-*/
+                        for (let elem in img_filepath) {
+                            fs.rename(img_filepath[elem], path.join(__dirname, "../public/images/" + files.imgFiles[elem].originalFilename), function (err) {
+                                if (err) throw err;
+                            });
+                        }
+            */
 
             for (var index = 0; index < img_filepath.length; index++) {
                 let img_object = {};
@@ -86,54 +86,70 @@ module.exports = function (router) {
             let count = 0;
 
             let read_array = new Array();
+            let s3_send_flag = false;
             // let read = fs.createReadStream(__dirname + "/../public/images/" + files.imgFiles[0].originalFilename);
             for (var i = 0; i < files.imgFiles.length; i++) {
                 read_array[i] = fs.createReadStream(path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename));
-            }
-
-            let upload = new Array();
-            let imgContentsArr = new Array(); // 이미지 관련 내용들 배열로 재정의
-
-
-            for (var i = 0; i < read_array.length; i++) {
-                let currentFile = files.imgFiles[i];
-                upload[i] = s3Stream.upload({
-                    Bucket: "moldebucket",
-                    Key: user_id + "_" + files.imgFiles[i].originalFilename,
-                    ACL: "public-read",
-                    StorageClass: "REDUCED_REDUNDANCY",
-                    ContentType: "multipart/form-data"
-                });
-
-                upload[i].on('part', function (dt) {
-                    console.log(dt);
-                });
-
-
-                upload[i].on('uploaded', function (dt) {
-                    console.log("경로입니다1." + dt.Location);
-                    let imgContents = new Object();  // 이미지 관련 내용들 오브젝트
-                    imgContents.filename = currentFile.originalFilename;
-                    imgContents.filepath = dt.Location;
-                    imgContentsArr.push(imgContents);
-
-                    count += 1;
-
-                    if (count == read_array.length) {
-                        Report.insertReportFunc(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, imgContentsArr, rep_date, function (err, report) {
-                            if (err) console.log(new Error(err));
-                            else {
-                                console.log("파일 저장 완료");
-                            }
-                        });
+                fs.rename(img_filepath[i], path.join(__dirname, "../public/images/" + files.imgFiles[i].originalFilename), function (err) {
+                    if (err) throw err;
+                    else{
+                        s3_send_flag = true;
                     }
                 });
-
             }
 
+           /* for (var i = 0; i < files.imgFiles.length; i++) {
+
+            }*/
+
+
+
+            if(s3_send_flag){
+                let upload = new Array();
+                let imgContentsArr = new Array(); // 이미지 관련 내용들 배열로 재정의
+
+                for (var i = 0; i < read_array.length; i++) {
+                    let currentFile = files.imgFiles[i];
+                    upload[i] = s3Stream.upload({
+                        Bucket: "moldebucket",
+                        Key: user_id + "_" + files.imgFiles[i].originalFilename,
+                        ACL: "public-read",
+                        StorageClass: "REDUCED_REDUNDANCY",
+                        ContentType: "multipart/form-data"
+                    });
+
+
+                    upload[i].on('part', function (dt) {
+                        console.log(dt);
+                    });
+
+
+                    upload[i].on('uploaded', function (dt) {
+                        console.log("경로입니다1." + dt.Location);
+                        let imgContents = new Object();  // 이미지 관련 내용들 오브젝트
+                        imgContents.filename = currentFile.originalFilename;
+                        imgContents.filepath = dt.Location;
+                        imgContentsArr.push(imgContents);
+
+                        count += 1;
+
+                        if (count == read_array.length) {
+                            Report.insertReportFunc(rep_id, rep_nm, rep_contents, rep_lat, rep_lon, rep_addr, user_id, imgContentsArr, rep_date, function (err, report) {
+                                if (err) console.log(new Error(err));
+                                else {
+                                    console.log("파일 저장 완료");
+                                }
+                            });
+                        }
+                    });
+
+                }
+
 // S3 전송
-            for (var i = 0; i < read_array.length; i++)
-                read_array[i].pipe(upload[i]);
+                for (var i = 0; i < read_array.length; i++)
+                    read_array[i].pipe(upload[i]);
+            }
+            // 명칭 바뀌고 나서 보내기
         });
     });
     // 관리자가 수정할 때 사용할 라우터
